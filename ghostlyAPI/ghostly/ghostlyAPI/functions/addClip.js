@@ -1,6 +1,9 @@
 /**
-* @returns {any}
+* Post clip to map, return clipId
+* @param {number} lat
+* @param {number} lon
+* @returns {string} 
 */
-module.exports = (context, callback) => {
-  callback(null, 'hello world');
+module.exports = (lat, lon, context, callback) => {
+  callback(null, "iamaclipid");
 };
