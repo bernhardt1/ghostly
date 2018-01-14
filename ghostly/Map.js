@@ -121,29 +121,26 @@ class Map extends Component {
 
         <View style={styles.buttons}>
 
-          <TouchableHighlight onPress={() => this.refreshClips()}
+          <TouchableHighlight onPress={() => this.centerOnUser()}
             style={styles.button}
-            underlayColor={'blue'}
+            underlayColor={'#66a3ff'}
           >
             <Image
               style={styles.buttonIcon}
-              source={require('./images/refresh.png')}
+              source={require('./images/center.png')}
             />
           </TouchableHighlight>
 
           <TouchableHighlight onPress={() => this.refreshClips()}
-            style={styles.button}
-            underlayColor={'blue'}
+            style={styles.recordButton}
+            underlayColor={'#66a3ff'}
           >
-            <Image
-              style={styles.buttonIcon}
-              source={require('./images/refresh.png')}
-            />
+            <View style={styles.recordIcon}></View>
           </TouchableHighlight>
 
           <TouchableHighlight onPress={() => this.refreshClips()}
             style={styles.button}
-            underlayColor={'blue'}
+            underlayColor={'#66a3ff'}
           >
             <Image
               style={styles.buttonIcon}
@@ -186,9 +183,23 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 40,
-    backgroundColor: 'red',
+    backgroundColor: '#3385ff',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  recordButton: {
+    width: 60,
+    height: 60,
+    borderRadius: 60,
+    backgroundColor: '#3385ff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  recordIcon: {
+    width: 30,
+    height: 30,
+    backgroundColor: 'white',
+    borderRadius: 30,
   },
   buttonIcon: {
     width: 30,
