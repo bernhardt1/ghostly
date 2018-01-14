@@ -4,7 +4,9 @@
   "description": "",
   "author": "ghostly <danieltlevy@gmail.com>",
   "main": "functions/__main__.js",
-  "dependencies": {},
+  "dependencies": {
+    "mongodb": "^2.2.33"
+  },
   "private": true,
   "stdlib": {
     "build": "faaslang",
