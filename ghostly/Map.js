@@ -12,6 +12,7 @@ import {
   Image,
 } from 'react-native';
 import MapView from 'react-native-maps';
+import { getClipLocations, addClip, getClip } from './Api.js';
 
 var { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
@@ -21,23 +22,27 @@ const LATITUDE = 49.282729;
 const LONGITUDE = -123.120738;
 const LATITUDE_DELTA = 0.01;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+var timer;
+
+const INITIAL_REGION = {
+  latitude: LATITUDE,
+  longitude: LONGITUDE,
+  latitudeDelta: LATITUDE_DELTA,
+  longitudeDelta: LONGITUDE_DELTA,
+};
 
 class Map extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      region: {
-        latitude: LATITUDE,
-        longitude: LONGITUDE,
-        latitudeDelta: LATITUDE_DELTA,
-        longitudeDelta: LONGITUDE_DELTA,
-      },
+      region: INITIAL_REGION,
       userPosition: null,
-      restrooms: null,
-      addingRestroom: false,
-      newRestroomCoordinate: null,
+      clips: null,
     }
-    this.onRegionChange = this.onRegionChange.bind(this);
+  }
+
+  componentWillMount() {
+    this.refreshClips();
   }
 
   // Center on the user's current position
@@ -65,6 +70,11 @@ class Map extends Component {
     );
   }
 
+  // Clear the listener for the user's current position
+  componentWillUnmount() {
+    navigator.geolocation.clearWatch(this.watchID);
+  }
+
   centerOnUser() {
     this.setState({
       region: {
@@ -77,8 +87,14 @@ class Map extends Component {
     console.log('centered');
   }
 
+  refreshClips() {
+    this.setState({
+      clips: getClipLocations()
+    });
+  }
+
   onRegionChange(region) {
-    this.setState({ region });
+    this.setState({region});
   }
 
   render() {
@@ -88,11 +104,55 @@ class Map extends Component {
         {/* Map that shows user location */}
         <MapView
           style={styles.map}
+          initialRegion={INITIAL_REGION}
           region={this.state.region}
-          onRegionChange={this.onRegionChange}
+          onRegionChange={region => this.onRegionChange(region)}
           showsUserLocation={true}
         >
+          {this.state.clips.map((clip, i) => (
+            <MapView.Marker
+              key={i}
+              coordinate={clip.location}
+              title={clip.id.toString()}
+              description={clip.id.toString()}
+            />
+          ))}
         </MapView>
+
+        <View style={styles.buttons}>
+
+          <TouchableHighlight onPress={() => this.refreshClips()}
+            style={styles.button}
+            underlayColor={'blue'}
+          >
+            <Image
+              style={styles.buttonIcon}
+              source={require('./images/refresh.png')}
+            />
+          </TouchableHighlight>
+
+          <TouchableHighlight onPress={() => this.refreshClips()}
+            style={styles.button}
+            underlayColor={'blue'}
+          >
+            <Image
+              style={styles.buttonIcon}
+              source={require('./images/refresh.png')}
+            />
+          </TouchableHighlight>
+
+          <TouchableHighlight onPress={() => this.refreshClips()}
+            style={styles.button}
+            underlayColor={'blue'}
+          >
+            <Image
+              style={styles.buttonIcon}
+              source={require('./images/refresh.png')}
+            />
+          </TouchableHighlight>
+
+        </View>
+
       </View>
     );
   }
@@ -102,14 +162,40 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  centerButton: {
+    height: 50
+  },
   description: {
     marginBottom: 20,
     fontSize: 18,
     textAlign: 'center',
     color: '#656565'
   },
+  buttons: {
+    position: 'absolute',
+    bottom: 0,
+    paddingBottom: 30,
+    paddingLeft: 30,
+    paddingRight: 30,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: width,
+  },
+  button: {
+    width: 40,
+    height: 40,
+    borderRadius: 40,
+    backgroundColor: 'red',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  buttonIcon: {
+    width: 30,
+    height: 30,
+  },
   map: {
-    flex: 1
+    flex: 1,
   }
 });
 
